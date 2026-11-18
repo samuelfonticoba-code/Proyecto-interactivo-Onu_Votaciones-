@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mundial Diplomático ONU · Votación sobre el Bloqueo a Cuba</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Oswald', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Estilos personalizados para estética de estadio y controles deslizantes */
+    body {
+      background-color: #090d16;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.14) 0%, transparent 55%),
+        radial-gradient(circle at 85% 30%, rgba(59, 130, 246, 0.08) 0%, transparent 45%);
+      color: #f1f5f9;
+    }
+
+    .pitch-pattern {
+      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    /* Slider personalizado tipo marcador */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #10b981 0%, #3b82f6 100%);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -7px;
+      background-color: #ffffff;
+      border: 4px solid #10b981;
+      height: 24px;
+      width: 24px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+      transition: transform 0.15s ease;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.18);
+    }
+
+    .jersey-card {
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.45s ease,
+                  background-color 0.45s ease,
+                  box-shadow 0.45s ease;
+    }
+
+    .jersey-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .jersey-selected {
+      box-shadow: 0 0 0 2px #10b981, 0 12px 28px -6px rgba(16, 185, 129, 0.35);
+      background-color: rgba(16, 185, 129, 0.12) !important;
+    }
+
+    /* Transiciones suaves para barras, insignias y aparición de elementos */
+    .smooth-bar-fill {
+      transition: width 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+      will-change: width;
+    }
+
+    .smooth-bar-row {
+      transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .vote-badge-pop {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  background-color 0.4s ease,
+                  border-color 0.4s ease;
+    }
+
+    @keyframes softReveal {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-soft-reveal {
+      animation: softReveal 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Scrollbar sutil */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-36 antialiased selection:bg-emerald-500 selection:text-white">
+
+  <!-- Barra Superior / Marcador General -->
+  <header class="sticky top-0 z-30 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 text-2xl shadow-lg shadow-emerald-950/50">
+          🏟️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-display text-xl font-bold tracking-wide text-white sm:text-2xl uppercase">
+              Marcador ONU: Resolución Bloqueo a Cuba
+            </h1>
+            <span class="hidden rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-xs font-semibold text-emerald-400 sm:inline-block">
+              Últimas 10 Votaciones (2015–2025)
+            </span>
+          </div>
+          <p class="text-xs text-slate-400">
+            Visualización acumulada por jornadas · <span class="text-amber-400/90">Nota: En 2020 no hubo votación presencial por COVID-19</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Leyenda rápida -->
+      <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
+        <span class="flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-950/40 px-2.5 py-1.5 text-emerald-300">
+          <span class="text-base">⚽</span> Gol = A favor
+        </span>
+        <span class="flex items-center gap-1.5 rounded-lg border border-amber-500/30 bg-amber-950/40 px-2.5 py-1.5 text-amber-300">
+          <span class="text-base">🧤</span> Guante = En contra
+        </span>
+        <span class="flex items-center gap-1.5 rounded-lg border border-rose-500/30 bg-rose-950/40 px-2.5 py-1.5 text-rose-300">
+          <span class="text-base">🟥</span> Tarjeta Roja = Abstención / Neutro
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl space-y-8 px-4 pt-6 sm:px-6">
+
+    <!-- Panel Superior: Resumen de Jornada y Equipos Más Goleadores -->
+    <section class="grid grid-cols-1 gap-5 lg:grid-cols-12">
+      
+      <!-- Tarjeta de Estado Acumulado del Intervalo -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl lg:col-span-5 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-400">
+              Intervalo Analizado
+            </span>
+            <span id="badge-jornada" class="rounded-md bg-slate-800 px-2.5 py-1 text-xs font-bold text-slate-200">
+              Jornada 10 de 10
+            </span>
+          </div>
+          <h2 class="mt-1 font-display text-3xl font-bold text-white sm:text-4xl">
+            2015 <span class="text-slate-500">➔</span> <span id="header-year-end" class="text-emerald-400">2025</span>
+          </h2>
+          <p id="year-context-note" class="mt-2 text-sm leading-relaxed text-slate-300">
+            Acumulado total de las 10 votaciones anuales en los 20 países seleccionados.
+          </p>
+        </div>
+
+        <!-- Marcadores globales del intervalo -->
+        <div class="mt-5 grid grid-cols-3 gap-3">
+          <div class="rounded-xl border border-emerald-500/20 bg-emerald-950/30 p-3 text-center">
+            <div class="text-2xl">⚽</div>
+            <div id="total-goles-intervalo" data-count="0" class="mt-1 font-display text-2xl font-bold text-emerald-400 tabular-nums">0</div>
+            <div class="text-[11px] font-medium uppercase tracking-wide text-slate-400">Goles Totales</div>
+          </div>
+          <div class="rounded-xl border border-amber-500/20 bg-amber-950/30 p-3 text-center">
+            <div class="text-2xl">🧤</div>
+            <div id="total-guantes-intervalo" data-count="0" class="mt-1 font-display text-2xl font-bold text-amber-400 tabular-nums">0</div>
+            <div class="text-[11px] font-medium uppercase tracking-wide text-slate-400">Guantes (Contra)</div>
+          </div>
+          <div class="rounded-xl border border-rose-500/20 bg-rose-950/30 p-3 text-center">
+            <div class="text-2xl">🟥</div>
+            <div id="total-rojas-intervalo" data-count="0" class="mt-1 font-display text-2xl font-bold text-rose-400 tabular-nums">0</div>
+            <div class="text-[11px] font-medium uppercase tracking-wide text-slate-400">Tarjetas Rojas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Podio: Equipos Más Goleadores hasta el año seleccionado -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-xl lg:col-span-7">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
+          <div>
+            <h3 class="flex items-center gap-2 font-display text-xl font-bold uppercase tracking-wide text-white">
+              <span>🏆</span> Equipos Más Goleadores hasta <span id="podium-year-label" class="text-emerald-400">2025</span>
+            </h3>
+            <p class="text-xs text-slate-400">
+              Países que han anotado gol (voto a favor) en todas las jornadas disputadas hasta el año marcado
+            </p>
+          </div>
+          <span id="goleadores-count-badge" class="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold text-emerald-400">
+            13 Invictos
+          </span>
+        </div>
+
+        <!-- Lista de líderes goleadores -->
+        <div id="top-scorers-container" class="mt-4 flex flex-wrap gap-2">
+          <!-- Generado dinámicamente -->
+        </div>
+
+        <!-- Destacados de cambios históricos en el año seleccionado -->
+        <div id="year-highlights-box" class="mt-4 rounded-xl border border-slate-800 bg-slate-950/70 p-3.5 text-xs text-slate-300 transition-all duration-300">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección Central: La Cancha de Camisetas + Ficha Técnica del Jugador Seleccionado -->
+    <section class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      
+      <!-- Cuadrícula de Camisetas (8 columnas) -->
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/70 p-5 pitch-pattern lg:col-span-8">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 class="font-display text-xl font-bold uppercase tracking-wide text-white">
+              👕 Alineación de Países · Jornada <span id="pitch-year-title" class="text-emerald-400">2025</span>
+            </h3>
+            <p class="text-xs text-slate-400">
+              Haz clic o señala cualquier camiseta para ver su historial y estadísticas acumuladas
+            </p>
+          </div>
+
+          <!-- Filtros rápidos por resultado del año -->
+          <div class="flex flex-wrap gap-1.5 text-xs">
+            <button data-filter="ALL" class="filter-btn active rounded-lg bg-emerald-600 px-3 py-1.5 font-semibold text-white transition">
+              Todos (20)
+            </button>
+            <button data-filter="GOL" class="filter-btn rounded-lg bg-slate-800 px-3 py-1.5 font-semibold text-slate-300 hover:bg-slate-700 transition">
+              ⚽ Goles
+            </button>
+            <button data-filter="GUANTE" class="filter-btn rounded-lg bg-slate-800 px-3 py-1.5 font-semibold text-slate-300 hover:bg-slate-700 transition">
+              🧤 Guantes
+            </button>
+            <button data-filter="ROJA" class="filter-btn rounded-lg bg-slate-800 px-3 py-1.5 font-semibold text-slate-300 hover:bg-slate-700 transition">
+              🟥 Rojas
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid de Camisetas -->
+        <div id="jerseys-grid" class="grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Ficha Detallada del País Seleccionado (4 columnas) -->
+      <aside class="rounded-2xl border border-slate-800 bg-slate-900/90 p-5 shadow-xl lg:col-span-4 flex flex-col justify-between">
+        <div id="player-detail-panel">
+          <!-- Contenido dinámico del país seleccionado -->
+        </div>
+      </aside>
+    </section>
+
+    <!-- Sección Inferior: Tres Gráficos de Barras Claros (Goles, Guantes, Tarjetas Rojas) -->
+    <section class="space-y-4">
+      <div class="flex flex-wrap items-end justify-between gap-2">
+        <div>
+          <h2 class="font-display text-2xl font-bold uppercase tracking-wide text-white">
+            📊 Estadísticas Acumuladas por Categoría (2015 – <span id="charts-year-label" class="text-emerald-400">2025</span>)
+          </h2>
+          <p class="text-xs text-slate-400">
+            Comparativa de barras con los países que lideran cada registro disciplinario y goleador en el intervalo seleccionado
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        
+        <!-- Gráfico 1: Barras de Goles (A favor) -->
+        <div class="rounded-2xl border border-emerald-500/25 bg-slate-900/85 p-5 shadow-lg">
+          <div class="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/20 text-xl">⚽</span>
+              <div>
+                <h3 class="font-display text-lg font-bold uppercase text-emerald-400">Ranking de Goles</h3>
+                <p class="text-[11px] text-slate-400">Votos a favor acumulados</p>
+              </div>
+            </div>
+            <span id="max-goles-badge" class="rounded bg-emerald-500/15 px-2 py-0.5 text-xs font-bold text-emerald-300">Máx: 10</span>
+          </div>
+          <div id="chart-goles" class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Barras generadas dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Gráfico 2: Barras de Guantes (En contra) -->
+        <div class="rounded-2xl border border-amber-500/25 bg-slate-900/85 p-5 shadow-lg">
+          <div class="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20 text-xl">🧤</span>
+              <div>
+                <h3 class="font-display text-lg font-bold uppercase text-amber-400">Ranking de Guantes</h3>
+                <p class="text-[11px] text-slate-400">Votos en contra acumulados</p>
+              </div>
+            </div>
+            <span id="max-guantes-badge" class="rounded bg-amber-500/15 px-2 py-0.5 text-xs font-bold text-amber-300">Máx: 9</span>
+          </div>
+          <div id="chart-guantes" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Barras generadas dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Gráfico 3: Barras de Tarjetas Rojas (Neutro / Abstención) -->
+        <div class="rounded-2xl border border-rose-500/25 bg-slate-900/85 p-5 shadow-lg">
+          <div class="mb-4 flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-500/20 text-xl">🟥</span>
+              <div>
+                <h3 class="font-display text-lg font-bold uppercase text-rose-400">Tarjetas Rojas</h3>
+                <p class="text-[11px] text-slate-400">Abstenciones / Neutros acumulados</p>
+              </div>
+            </div>
+            <span id="max-rojas-badge" class="rounded bg-rose-500/15 px-2 py-0.5 text-xs font-bold text-rose-300">Máx: 7</span>
+          </div>
+          <div id="chart-rojas" class="space-y-3 max-h-[380px] overflow-y-auto pr-1">
+            <!-- Barras generadas dinámicamente -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Marcador Inferior Fijo: Control de Tiempo Interactivo (Timeline Slider) -->
+  <footer class="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-800 bg-slate-950/95 shadow-[0_-10px_30px_rgba(0,0,0,0.75)] backdrop-blur-md">
+    <!-- Barra de progreso continua durante el modo Simulación -->
+    <div class="h-1 w-full bg-slate-900 overflow-hidden">
+      <div id="sim-progress-bar" class="h-full w-0 bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400"></div>
+    </div>
+
+    <div class="mx-auto max-w-6xl px-4 py-3.5">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        
+        <!-- Controles de reproducción -->
+        <div class="flex items-center justify-between sm:justify-start gap-2">
+          <div class="flex items-center gap-1.5">
+            <button id="btn-prev" title="Año anterior" class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 active:scale-95 transition">
+              ◀
+            </button>
+            <button id="btn-play" title="Reproducir evolución histórica" class="flex h-9 items-center gap-1.5 rounded-lg bg-emerald-600 px-3.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-emerald-500 active:scale-95 transition">
+              <span id="play-icon">▶</span> <span id="play-text">Simular</span>
+            </button>
+            <button id="btn-next" title="Siguiente año" class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700 bg-slate-800 text-slate-200 hover:bg-slate-700 active:scale-95 transition">
+              ▶
+            </button>
+          </div>
+
+          <div class="sm:hidden text-right">
+            <span class="text-xs text-slate-400">Hasta año:</span>
+            <span id="mobile-year-display" class="ml-1 font-display text-xl font-bold text-emerald-400">2025</span>
+          </div>
+        </div>
+
+        <!-- Barra deslizante y etiquetas de los 10 años -->
+        <div class="flex-1 sm:px-4">
+          <input
+            id="year-slider"
+            type="range"
+            min="0"
+            max="9"
+            value="9"
+            step="1"
+            class="w-full"
+            aria-label="Seleccionar año de votación"
+          />
+          <div id="slider-ticks" class="mt-1.5 flex justify-between text-[11px] font-semibold text-slate-400">
+            <!-- Ticks generados dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Indicador numérico grande en escritorio -->
+        <div class="hidden sm:flex items-center gap-3 rounded-xl border border-slate-800 bg-slate-900 px-4 py-1.5">
+          <div class="text-right">
+            <div class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Corte hasta</div>
+            <div id="desktop-year-display" class="font-display text-2xl font-bold leading-none text-emerald-400">2025</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * BASE DE DATOS HISTÓRICA DE VOTACIONES ONU (RESOLUCIÓN BLOQUEO A CUBA)
+     * Últimas 10 votaciones anuales: 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025.
+     * (En 2020 no se celebró votación por la pandemia de COVID-19).
+     *
+     * Códigos de voto:
+     * - 'GOL'    : Voto a favor de poner fin al bloqueo (⚽)
+     * - 'GUANTE' : Voto en contra de la resolución (🧤)
+     * - 'ROJA'   : Abstención o ausencia/neutralidad en la votación (🟥)
+     */
+    const YEARS = [2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025];
+
+    const YEAR_NOTES = {
+      2015: "Jornada 1 (2015): 191 votos a favor y solo 2 en contra (EE. UU. e Israel). Todos los demás equipos seleccionados anotan Gol.",
+      2016: "Jornada 2 (2016): ¡Giro histórico! Estados Unidos e Israel se abstienen por primera vez (🟥 Tarjeta Roja) durante el deshielo diplomático.",
+      2017: "Jornada 3 (2017): EE. UU. e Israel retoman el Guante (🧤 en contra). Ucrania y Moldavia no emiten voto / quedan neutrales (🟥).",
+      2018: "Jornada 4 (2018): Se mantiene el bloque de 189 Goles. EE. UU. e Israel con Guante (🧤); Ucrania y Moldavia reciben Tarjeta Roja (🟥).",
+      2019: "Jornada 5 (2019): Brasil cambia su histórico Gol por un Guante (🧤 en contra). Colombia y Ucrania se abstienen (🟥 Tarjeta Roja).",
+      2021: "Jornada 6 (2021): Tras la pausa de 2020 por pandemia, EE. UU. e Israel votan en contra (🧤), mientras Brasil, Colombia y Ucrania se abstienen (🟥).",
+      2022: "Jornada 7 (2022): Colombia vuelve a anotar Gol (⚽ a favor). Brasil y Ucrania mantienen la Tarjeta Roja (🟥); EE. UU. e Israel en contra (🧤).",
+      2023: "Jornada 8 (2023): Brasil regresa a la senda del Gol (⚽ a favor). Solo EE. UU. e Israel sacan Guante (🧤) y Ucrania mantiene abstención (🟥).",
+      2024: "Jornada 9 (2024): 187 Goles globales. EE. UU. e Israel votan en contra (🧤); Moldavia se abstiene y Ucrania no registra voto (🟥).",
+      2025: "Jornada 10 (2025): Cierre del ciclo de 10 votaciones. Se consolidan los máximos goleadores históricos frente a las posturas en contra y abstenciones."
+    };
+
+    const COUNTRIES = [
+      {
+        code: "CUB",
+        name: "Cuba",
+        flag: "🇨🇺",
+        primary: "#002A8F",
+        secondary: "#CF142B",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "USA",
+        name: "Estados Unidos",
+        flag: "🇺🇸",
+        primary: "#1E3A8A",
+        secondary: "#DC2626",
+        accent: "#FFFFFF",
+        votes: ["GUANTE", "ROJA", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE"]
+      },
+      {
+        code: "ISR",
+        name: "Israel",
+        flag: "🇮🇱",
+        primary: "#FFFFFF",
+        secondary: "#0038B8",
+        accent: "#0038B8",
+        votes: ["GUANTE", "ROJA", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE", "GUANTE"]
+      },
+      {
+        code: "BRA",
+        name: "Brasil",
+        flag: "🇧🇷",
+        primary: "#FACC15",
+        secondary: "#15803D",
+        accent: "#1D4ED8",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GUANTE", "ROJA", "ROJA", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "COL",
+        name: "Colombia",
+        flag: "🇨🇴",
+        primary: "#FBBF24",
+        secondary: "#1E3A8A",
+        accent: "#DC2626",
+        votes: ["GOL", "GOL", "GOL", "GOL", "ROJA", "ROJA", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "UKR",
+        name: "Ucrania",
+        flag: "🇺🇦",
+        primary: "#0057B7",
+        secondary: "#FFD700",
+        accent: "#FFD700",
+        votes: ["GOL", "GOL", "ROJA", "ROJA", "ROJA", "ROJA", "ROJA", "ROJA", "ROJA", "ROJA"]
+      },
+      {
+        code: "MDA",
+        name: "Moldavia",
+        flag: "🇲🇩",
+        primary: "#0046AE",
+        secondary: "#FFD200",
+        accent: "#CC092F",
+        votes: ["GOL", "GOL", "ROJA", "ROJA", "GOL", "GOL", "GOL", "GOL", "ROJA", "ROJA"]
+      },
+      {
+        code: "ARG",
+        name: "Argentina",
+        flag: "🇦🇷",
+        primary: "#74ACDF",
+        secondary: "#FFFFFF",
+        accent: "#F6B40E",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GUANTE"]
+      },
+      {
+        code: "MEX",
+        name: "México",
+        flag: "🇲🇽",
+        primary: "#006847",
+        secondary: "#CE1126",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "ESP",
+        name: "España",
+        flag: "🇪🇸",
+        primary: "#AA151B",
+        secondary: "#F1BF00",
+        accent: "#F1BF00",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "FRA",
+        name: "Francia",
+        flag: "🇫🇷",
+        primary: "#002395",
+        secondary: "#ED2939",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "CHN",
+        name: "China",
+        flag: "🇨🇳",
+        primary: "#DE2910",
+        secondary: "#FFDE00",
+        accent: "#FFDE00",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "RUS",
+        name: "Rusia",
+        flag: "🇷🇺",
+        primary: "#FFFFFF",
+        secondary: "#0039A6",
+        accent: "#D52B1E",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "CAN",
+        name: "Canadá",
+        flag: "🇨🇦",
+        primary: "#D80621",
+        secondary: "#FFFFFF",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "GBR",
+        name: "Reino Unido",
+        flag: "🇬🇧",
+        primary: "#012169",
+        secondary: "#C8102E",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "JPN",
+        name: "Japón",
+        flag: "🇯🇵",
+        primary: "#FFFFFF",
+        secondary: "#BC002D",
+        accent: "#BC002D",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "ZAF",
+        name: "Sudáfrica",
+        flag: "🇿🇦",
+        primary: "#007A4D",
+        secondary: "#FFB612",
+        accent: "#DE3831",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "IND",
+        name: "India",
+        flag: "🇮🇳",
+        primary: "#FF9933",
+        secondary: "#138808",
+        accent: "#000080",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "VEN",
+        name: "Venezuela",
+        flag: "🇻🇪",
+        primary: "#FCE300",
+        secondary: "#0033A0",
+        accent: "#CF142B",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      },
+      {
+        code: "CHL",
+        name: "Chile",
+        flag: "🇨🇱",
+        primary: "#D52B1E",
+        secondary: "#0039A6",
+        accent: "#FFFFFF",
+        votes: ["GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL", "GOL"]
+      }
+    ];
+
+    // Estado de la aplicación
+    let state = {
+      currentIndex: 9,        // Índice en YEARS (0 = 2015 ... 9 = 2025)
+      selectedCountry: "BRA", // País seleccionado para la ficha técnica
+      activeFilter: "ALL",    // 'ALL' | 'GOL' | 'GUANTE' | 'ROJA'
+      isPlaying: false,
+      playRafId: null,
+      stepStartTime: null,
+      stepDuration: 1450      // Ritmo pausado y cómodo (1.45s por jornada)
+    };
+
+    // Registro de valores numéricos previos para interpolación suave
+    const counterStore = new WeakMap();
+    const numericCache = new Map();
+
+    // Referencias DOM
+    const slider = document.getElementById("year-slider");
+    const sliderTicks = document.getElementById("slider-ticks");
+    const jerseysGrid = document.getElementById("jerseys-grid");
+    const playerDetailPanel = document.getElementById("player-detail-panel");
+    const topScorersContainer = document.getElementById("top-scorers-container");
+    const yearHighlightsBox = document.getElementById("year-highlights-box");
+    const simProgressBar = document.getElementById("sim-progress-bar");
+
+    /**
+     * Interpolación suave de números con requestAnimationFrame y easing cúbico
+     */
+    function animateNumber(el, targetValue, prefix = "", duration = 650, cacheKey = null) {
+      if (!el) return;
+      const startValue = cacheKey && numericCache.has(cacheKey)
+        ? numericCache.get(cacheKey)
+        : (counterStore.has(el) ? counterStore.get(el) : targetValue);
+
+      if (cacheKey) numericCache.set(cacheKey, targetValue);
+      counterStore.set(el, targetValue);
+
+      if (startValue === targetValue) {
+        el.textContent = `${prefix}${targetValue}`;
+        return;
+      }
+
+      if (el._animRaf) cancelAnimationFrame(el._animRaf);
+      const startTime = performance.now();
+
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        // Easing easeOutCubic para un asentamiento fluido
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = Math.round(startValue + (targetValue - startValue) * eased);
+        el.textContent = `${prefix}${current}`;
+
+        if (progress < 1) {
+          el._animRaf = requestAnimationFrame(tick);
+        } else {
+          el.textContent = `${prefix}${targetValue}`;
+          el._animRaf = null;
+        }
+      }
+
+      el._animRaf = requestAnimationFrame(tick);
+    }
+
+    // Utilidades de presentación
+    function getVoteMeta(vote) {
+      if (vote === "GOL") {
+        return {
+          emoji: "⚽",
+          label: "Gol (A favor)",
+          short: "GOL",
+          badgeClass: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
+          ringClass: "border-emerald-500/40"
+        };
+      }
+      if (vote === "GUANTE") {
+        return {
+          emoji: "🧤",
+          label: "Guante (En contra)",
+          short: "GUANTE",
+          badgeClass: "bg-amber-500/20 text-amber-300 border-amber-500/40",
+          ringClass: "border-amber-500/40"
+        };
+      }
+      return {
+        emoji: "🟥",
+        label: "Tarjeta Roja (Abstención)",
+        short: "ROJA",
+        badgeClass: "bg-rose-500/20 text-rose-300 border-rose-500/40",
+        ringClass: "border-rose-500/40"
+      };
+    }
+
+    /**
+     * Genera el SVG de una camiseta deportiva personalizada con los colores del país
+     */
+    function createJerseySVG(country, voteEmoji, badgeId = "") {
+      const textColor = country.primary === "#FFFFFF" || country.primary === "#FACC15" || country.primary === "#FBBF24" || country.primary === "#FCE300"
+        ? "#0f172a"
+        : "#ffffff";
+
+      return `
+        <div class="relative mx-auto h-20 w-20 flex items-center justify-center">
+          <svg viewBox="0 0 100 90" class="h-full w-full drop-shadow-md">
+            <!-- Cuerpo y mangas de camiseta -->
+            <path d="M25,10 L38,5 Q50,14 62,5 L75,10 L95,28 L82,42 L72,33 L72,83 L28,83 L28,33 L18,42 L5,28 Z"
+                  fill="${country.primary}" stroke="${country.secondary}" stroke-width="3.5" stroke-linejoin="round"/>
+            <!-- Franja deportiva diagonal/pecho -->
+            <path d="M28,44 L72,34 L72,46 L28,56 Z" fill="${country.secondary}" opacity="0.9"/>
+            <!-- Cuello -->
+            <path d="M38,5 Q50,16 62,5" fill="none" stroke="${country.accent}" stroke-width="3"/>
+            <!-- Código de país en la camiseta -->
+            <text x="50" y="31" text-anchor="middle" fill="${textColor}" font-family="Oswald, sans-serif" font-weight="700" font-size="13" letter-spacing="0.5">
+              ${country.code}
+            </text>
+          </svg>
+          <!-- Insignia del resultado de la jornada actual -->
+          <span ${badgeId ? `id="${badgeId}"` : ""} class="vote-badge-pop absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-950 text-base shadow-lg">
+            ${voteEmoji}
+          </span>
+        </div>
+      `;
+    }
+
+    /**
+     * Calcula estadísticas acumuladas desde el año 0 hasta state.currentIndex
+     */
+    function computeStatsUpTo(index) {
+      let totalGoles = 0;
+      let totalGuantes = 0;
+      let totalRojas = 0;
+
+      const countryStats = COUNTRIES.map(country => {
+        const slice = country.votes.slice(0, index + 1);
+        const goles = slice.filter(v => v === "GOL").length;
+        const guantes = slice.filter(v => v === "GUANTE").length;
+        const rojas = slice.filter(v => v === "ROJA").length;
+        const currentVote = country.votes[index];
+
+        totalGoles += goles;
+        totalGuantes += guantes;
+        totalRojas += rojas;
+
+        return {
+          ...country,
+          goles,
+          guantes,
+          rojas,
+          currentVote,
+          historySlice: slice
+        };
+      });
+
+      return {
+        countryStats,
+        totalGoles,
+        totalGuantes,
+        totalRojas,
+        jornadasCount: index + 1
+      };
+    }
+
+    /**
+     * Renderiza los ticks inferiores del slider de años
+     */
+    function renderSliderTicks() {
+      sliderTicks.innerHTML = YEARS.map((year, idx) => {
+        const isActive = idx === state.currentIndex;
+        const isIncluded = idx <= state.currentIndex;
+        return `
+          <button
+            onclick="setYearIndex(${idx})"
+            class="px-1 py-0.5 rounded transition ${
+              isActive
+                ? "bg-emerald-500 text-slate-950 font-extrabold scale-110"
+                : isIncluded
+                ? "text-emerald-400 hover:text-white"
+                : "text-slate-500 hover:text-slate-300"
+            }"
+          >
+            ${year}
+          </button>
+        `;
+      }).join("");
+    }
+
+    /**
+     * Renderiza el podio de equipos más goleadores hasta el año seleccionado
+     */
+    function renderTopScorers(countryStats, jornadasCount, selectedYear) {
+      const maxGoles = Math.max(...countryStats.map(c => c.goles));
+      const topScorers = countryStats
+        .filter(c => c.goles === maxGoles && maxGoles > 0)
+        .sort((a, b) => a.name.localeCompare(b.name));
+
+      document.getElementById("podium-year-label").textContent = selectedYear;
+      document.getElementById("goleadores-count-badge").textContent =
+        `${topScorers.length} ${topScorers.length === 1 ? "Líder" : "Líderes"} (${maxGoles}/${jornadasCount} Goles)`;
+
+      topScorersContainer.innerHTML = topScorers.map(c => `
+        <button
+          onclick="selectCountry('${c.code}')"
+          class="animate-soft-reveal flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-950/35 px-3 py-1.5 text-xs font-semibold text-emerald-200 hover:bg-emerald-900/50 transition"
+        >
+          <span class="text-base">${c.flag}</span>
+          <span>${c.name}</span>
+          <span class="rounded bg-emerald-500/20 px-1.5 py-0.5 font-mono text-[11px] font-bold text-emerald-300 tabular-nums">
+            ⚽ ${c.goles}
+          </span>
+        </button>
+      `).join("");
+
+      // Nota histórica de la jornada con aparición suave
+      yearHighlightsBox.innerHTML = `
+        <div key="${selectedYear}" class="animate-soft-reveal flex items-start gap-2.5">
+          <span class="text-base">📋</span>
+          <div>
+            <span class="font-bold text-white">Crónica de la Jornada ${selectedYear}:</span>
+            <span class="text-slate-300">${YEAR_NOTES[selectedYear]}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    /**
+     * Inicializa los nodos DOM de las camisetas una sola vez para evitar parpadeos
+     */
+    function ensureJerseysInitialized() {
+      if (jerseysGrid.dataset.initialized === "true") return;
+
+      jerseysGrid.innerHTML = COUNTRIES.map(country => `
+        <div
+          id="jersey-card-${country.code}"
+          onclick="selectCountry('${country.code}')"
+          onmouseenter="selectCountry('${country.code}', true)"
+          role="button"
+          tabindex="0"
+          class="jersey-card cursor-pointer rounded-xl border border-slate-800 bg-slate-950/80 p-3 text-center hover:border-slate-600"
+        >
+          <div class="flex items-center justify-between text-[11px] font-semibold text-slate-400">
+            <span>${country.flag}</span>
+            <span id="jersey-short-${country.code}" class="rounded px-1.5 py-0.5 text-[10px] border transition-colors duration-300">GOL</span>
+          </div>
+
+          <div class="my-1.5">
+            ${createJerseySVG(country, "⚽", `jersey-emoji-${country.code}`)}
+          </div>
+
+          <div class="truncate text-xs font-bold text-white">${country.name}</div>
+
+          <!-- Mini marcador acumulado del país hasta este año -->
+          <div class="mt-2 flex items-center justify-center gap-2 border-t border-slate-800/80 pt-1.5 text-[11px] font-semibold tabular-nums">
+            <span id="jersey-goles-${country.code}" title="Goles acumulados" class="text-emerald-400">⚽0</span>
+            <span id="jersey-guantes-${country.code}" title="Guantes acumulados" class="text-amber-400">🧤0</span>
+            <span id="jersey-rojas-${country.code}" title="Tarjetas Rojas acumuladas" class="text-rose-400">🟥0</span>
+          </div>
+        </div>
+      `).join("");
+
+      const emptyMsg = document.createElement("div");
+      emptyMsg.id = "jerseys-empty-msg";
+      emptyMsg.className = "hidden col-span-full rounded-xl border border-slate-800 bg-slate-950/60 p-8 text-center text-sm text-slate-400";
+      emptyMsg.textContent = "Ningún país de la selección registró este resultado en la jornada seleccionada.";
+      jerseysGrid.appendChild(emptyMsg);
+
+      jerseysGrid.dataset.initialized = "true";
+    }
+
+    /**
+     * Actualiza suavemente la cuadrícula de camisetas sin destruir el DOM
+     */
+    function renderJerseysGrid(countryStats, selectedYear) {
+      document.getElementById("pitch-year-title").textContent = selectedYear;
+      ensureJerseysInitialized();
+
+      let visibleCount = 0;
+
+      countryStats.forEach(country => {
+        const card = document.getElementById(`jersey-card-${country.code}`);
+        const shortBadge = document.getElementById(`jersey-short-${country.code}`);
+        const emojiBadge = document.getElementById(`jersey-emoji-${country.code}`);
+        const golesEl = document.getElementById(`jersey-goles-${country.code}`);
+        const guantesEl = document.getElementById(`jersey-guantes-${country.code}`);
+        const rojasEl = document.getElementById(`jersey-rojas-${country.code}`);
+
+        const matchesFilter = state.activeFilter === "ALL" || country.currentVote === state.activeFilter;
+        if (!matchesFilter) {
+          card.classList.add("hidden");
+          return;
+        }
+
+        visibleCount++;
+        card.classList.remove("hidden");
+
+        const meta = getVoteMeta(country.currentVote);
+        const isSelected = country.code === state.selectedCountry;
+
+        // Actualizar bordes y selección de manera continua
+        card.className = `jersey-card cursor-pointer rounded-xl border ${meta.ringClass} bg-slate-950/80 p-3 text-center ${
+          isSelected ? "jersey-selected" : "hover:border-slate-600"
+        }`;
+
+        shortBadge.className = `rounded px-1.5 py-0.5 text-[10px] border transition-colors duration-300 ${meta.badgeClass}`;
+        shortBadge.textContent = meta.short;
+
+        // Pulso sutil si cambió el ícono del voto en esta jornada
+        if (emojiBadge.textContent.trim() !== meta.emoji) {
+          emojiBadge.textContent = meta.emoji;
+          emojiBadge.style.transform = "scale(1.28)";
+          setTimeout(() => {
+            if (emojiBadge) emojiBadge.style.transform = "scale(1)";
+          }, 260);
+        }
+
+        // Animación progresiva de los contadores de cada camiseta
+        animateNumber(golesEl, country.goles, "⚽", 600, `card-g-${country.code}`);
+        animateNumber(guantesEl, country.guantes, "🧤", 600, `card-u-${country.code}`);
+        animateNumber(rojasEl, country.rojas, "🟥", 600, `card-r-${country.code}`);
+      });
+
+      const emptyMsg = document.getElementById("jerseys-empty-msg");
+      if (visibleCount === 0) {
+        emptyMsg.textContent = `Ningún país de la selección registró este resultado en ${selectedYear}.`;
+        emptyMsg.classList.remove("hidden");
+      } else {
+        emptyMsg.classList.add("hidden");
+      }
+    }
+
+    /**
+     * Renderiza el panel lateral con actualización fluida de contadores e historial
+     */
+    function renderPlayerDetail(countryStats, selectedYear) {
+      const country = countryStats.find(c => c.code === state.selectedCountry) || countryStats[0];
+      const currentMeta = getVoteMeta(country.currentVote);
+
+      const historyItems = YEARS.slice(0, state.currentIndex + 1).map((yr, idx) => {
+        const v = country.votes[idx];
+        const m = getVoteMeta(v);
+        const isLatest = idx === state.currentIndex;
+        return `
+          <div class="${isLatest ? "animate-soft-reveal border-slate-700 bg-slate-900/90" : "border-slate-800/90 bg-slate-950/70"} flex items-center justify-between rounded-lg border px-3 py-1.5 text-xs transition-colors">
+            <span class="font-mono font-bold text-slate-300">Jornada ${yr}</span>
+            <span class="flex items-center gap-1.5 font-semibold ${
+              v === "GOL" ? "text-emerald-400" : v === "GUANTE" ? "text-amber-400" : "text-rose-400"
+            }">
+              <span>${m.emoji}</span>
+              <span>${m.label}</span>
+            </span>
+          </div>
+        `;
+      }).reverse().join("");
+
+      if (playerDetailPanel.dataset.country !== country.code) {
+        playerDetailPanel.dataset.country = country.code;
+        playerDetailPanel.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+              <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Ficha del Equipo</span>
+              <span id="detail-current-badge" class="rounded-md border ${currentMeta.badgeClass} px-2 py-0.5 text-xs font-bold transition-colors duration-300">
+                ${selectedYear}: ${currentMeta.emoji} ${currentMeta.short}
+              </span>
+            </div>
+
+            <div class="mt-4 flex items-center gap-4">
+              <div class="shrink-0">
+                ${createJerseySVG(country, currentMeta.emoji, "detail-jersey-emoji")}
+              </div>
+              <div>
+                <div class="text-2xl">${country.flag}</div>
+                <h3 class="font-display text-2xl font-bold uppercase text-white">${country.name}</h3>
+                <p id="detail-subtitle" class="text-xs text-slate-400">Acumulado 2015 – ${selectedYear} (${state.currentIndex + 1} jornadas)</p>
+              </div>
+            </div>
+
+            <!-- Contadores individuales -->
+            <div class="mt-4 grid grid-cols-3 gap-2 text-center tabular-nums">
+              <div class="rounded-xl border border-emerald-500/25 bg-emerald-950/30 p-2.5">
+                <div class="text-lg">⚽</div>
+                <div id="detail-goles-val" class="font-display text-xl font-bold text-emerald-400">0</div>
+                <div class="text-[10px] uppercase text-slate-400">Goles</div>
+              </div>
+              <div class="rounded-xl border border-amber-500/25 bg-amber-950/30 p-2.5">
+                <div class="text-lg">🧤</div>
+                <div id="detail-guantes-val" class="font-display text-xl font-bold text-amber-400">0</div>
+                <div class="text-[10px] uppercase text-slate-400">Guantes</div>
+              </div>
+              <div class="rounded-xl border border-rose-500/25 bg-rose-950/30 p-2.5">
+                <div class="text-lg">🟥</div>
+                <div id="detail-rojas-val" class="font-display text-xl font-bold text-rose-400">0</div>
+                <div class="text-[10px] uppercase text-slate-400">Rojas</div>
+              </div>
+            </div>
+
+            <!-- Lista histórica por jornada -->
+            <div class="mt-5">
+              <h4 id="detail-history-title" class="mb-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                Historial de Votación hasta ${selectedYear}
+              </h4>
+              <div id="detail-history-list" class="space-y-1.5 max-h-[250px] overflow-y-auto pr-1">
+                ${historyItems}
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        const badgeEl = document.getElementById("detail-current-badge");
+        badgeEl.className = `rounded-md border ${currentMeta.badgeClass} px-2 py-0.5 text-xs font-bold transition-colors duration-300`;
+        badgeEl.textContent = `${selectedYear}: ${currentMeta.emoji} ${currentMeta.short}`;
+
+        const emojiEl = document.getElementById("detail-jersey-emoji");
+        if (emojiEl) emojiEl.textContent = currentMeta.emoji;
+
+        document.getElementById("detail-subtitle").textContent =
+          `Acumulado 2015 – ${selectedYear} (${state.currentIndex + 1} jornadas)`;
+        document.getElementById("detail-history-title").textContent =
+          `Historial de Votación hasta ${selectedYear}`;
+        document.getElementById("detail-history-list").innerHTML = historyItems;
+      }
+
+      animateNumber(document.getElementById("detail-goles-val"), country.goles, "", 600, `detail-g-${country.code}`);
+      animateNumber(document.getElementById("detail-guantes-val"), country.guantes, "", 600, `detail-u-${country.code}`);
+      animateNumber(document.getElementById("detail-rojas-val"), country.rojas, "", 600, `detail-r-${country.code}`);
+    }
+
+    /**
+     * Inicializa los contenedores de barras una sola vez para permitir transiciones CSS suaves
+     */
+    function ensureChartsInitialized() {
+      const configs = [
+        {
+          id: "chart-goles",
+          key: "goles",
+          colorText: "text-emerald-400",
+          hoverText: "group-hover:text-emerald-400",
+          barGradient: "from-emerald-600 to-emerald-400",
+          barHeight: "h-2.5",
+          emoji: "⚽"
+        },
+        {
+          id: "chart-guantes",
+          key: "guantes",
+          colorText: "text-amber-400",
+          hoverText: "group-hover:text-amber-400",
+          barGradient: "from-amber-600 to-amber-400",
+          barHeight: "h-3",
+          emoji: "🧤"
+        },
+        {
+          id: "chart-rojas",
+          key: "rojas",
+          colorText: "text-rose-400",
+          hoverText: "group-hover:text-rose-400",
+          barGradient: "from-rose-600 to-rose-400",
+          barHeight: "h-3",
+          emoji: "🟥"
+        }
+      ];
+
+      configs.forEach(cfg => {
+        const container = document.getElementById(cfg.id);
+        if (container.dataset.initialized === "true") return;
+
+        container.innerHTML = COUNTRIES.map(c => `
+          <div id="${cfg.id}-row-${c.code}" onclick="selectCountry('${c.code}')" class="smooth-bar-row cursor-pointer group">
+            <div class="mb-1 flex items-center justify-between text-xs">
+              <span class="font-medium text-slate-200 ${cfg.hoverText} transition">
+                ${c.flag} ${c.name}
+              </span>
+              <span id="${cfg.id}-val-${c.code}" class="font-mono font-bold ${cfg.colorText} tabular-nums">${cfg.emoji} 0</span>
+            </div>
+            <div class="${cfg.barHeight} w-full overflow-hidden rounded-full bg-slate-800">
+              <div id="${cfg.id}-bar-${c.code}" class="smooth-bar-fill h-full rounded-full bg-gradient-to-r ${cfg.barGradient}" style="width: 0%"></div>
+            </div>
+          </div>
+        `).join("");
+
+        const emptyNote = document.createElement("p");
+        emptyNote.id = `${cfg.id}-empty`;
+        emptyNote.className = "hidden text-xs text-slate-400 py-6 text-center";
+        container.appendChild(emptyNote);
+
+        container.dataset.initialized = "true";
+      });
+    }
+
+    /**
+     * Actualiza continuamente el ancho, orden y números de los 3 gráficos de barras
+     */
+    function renderBarCharts(countryStats, jornadasCount, selectedYear) {
+      document.getElementById("charts-year-label").textContent = selectedYear;
+      ensureChartsInitialized();
+
+      // 1. Gráfico de Goles (A favor)
+      const sortedGoles = [...countryStats].sort((a, b) => b.goles - a.goles || a.name.localeCompare(b.name));
+      const maxGoles = Math.max(...sortedGoles.map(c => c.goles), 1);
+      document.getElementById("max-goles-badge").textContent = `Máx: ${maxGoles}/${jornadasCount}`;
+
+      const golesContainer = document.getElementById("chart-goles");
+      sortedGoles.forEach(c => {
+        const row = document.getElementById(`chart-goles-row-${c.code}`);
+        const bar = document.getElementById(`chart-goles-bar-${c.code}`);
+        const val = document.getElementById(`chart-goles-val-${c.code}`);
+        const pct = Math.round((c.goles / jornadasCount) * 100);
+
+        golesContainer.appendChild(row);
+        bar.style.width = `${pct}%`;
+        animateNumber(val, c.goles, "⚽ ", 650, `bar-g-${c.code}`);
+      });
+
+      // 2. Gráfico de Guantes (En contra)
+      const sortedGuantes = [...countryStats].sort((a, b) => b.guantes - a.guantes || a.name.localeCompare(b.name));
+      const activeGuantes = sortedGuantes.filter(c => c.guantes > 0);
+      const maxGuantes = activeGuantes.length ? activeGuantes[0].guantes : 0;
+      document.getElementById("max-guantes-badge").textContent = `Máx: ${maxGuantes}/${jornadasCount}`;
+
+      const guantesContainer = document.getElementById("chart-guantes");
+      const guantesEmpty = document.getElementById("chart-guantes-empty");
+      sortedGuantes.forEach(c => {
+        const row = document.getElementById(`chart-guantes-row-${c.code}`);
+        const bar = document.getElementById(`chart-guantes-bar-${c.code}`);
+        const val = document.getElementById(`chart-guantes-val-${c.code}`);
+        const pct = Math.round((c.guantes / jornadasCount) * 100);
+
+        guantesContainer.appendChild(row);
+        if (c.guantes > 0) {
+          row.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            bar.style.width = `${pct}%`;
+          });
+          animateNumber(val, c.guantes, "🧤 ", 650, `bar-u-${c.code}`);
+        } else {
+          bar.style.width = "0%";
+          row.classList.add("hidden");
+        }
+      });
+
+      if (activeGuantes.length === 0) {
+        guantesEmpty.textContent = "Ningún país registró votos en contra en este intervalo.";
+        guantesEmpty.classList.remove("hidden");
+      } else {
+        guantesEmpty.classList.add("hidden");
+      }
+
+      // 3. Gráfico de Tarjetas Rojas (Neutro / Abstención)
+      const sortedRojas = [...countryStats].sort((a, b) => b.rojas - a.rojas || a.name.localeCompare(b.name));
+      const activeRojas = sortedRojas.filter(c => c.rojas > 0);
+      const maxRojas = activeRojas.length ? activeRojas[0].rojas : 0;
+      document.getElementById("max-rojas-badge").textContent = `Máx: ${maxRojas}/${jornadasCount}`;
+
+      const rojasContainer = document.getElementById("chart-rojas");
+      const rojasEmpty = document.getElementById("chart-rojas-empty");
+      sortedRojas.forEach(c => {
+        const row = document.getElementById(`chart-rojas-row-${c.code}`);
+        const bar = document.getElementById(`chart-rojas-bar-${c.code}`);
+        const val = document.getElementById(`chart-rojas-val-${c.code}`);
+        const pct = Math.round((c.rojas / jornadasCount) * 100);
+
+        rojasContainer.appendChild(row);
+        if (c.rojas > 0) {
+          row.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            bar.style.width = `${pct}%`;
+          });
+          animateNumber(val, c.rojas, "🟥 ", 650, `bar-r-${c.code}`);
+        } else {
+          bar.style.width = "0%";
+          row.classList.add("hidden");
+        }
+      });
+
+      if (activeRojas.length === 0) {
+        rojasEmpty.textContent = `Ningún país recibió tarjeta roja (abstención) hasta ${selectedYear}.`;
+        rojasEmpty.classList.remove("hidden");
+      } else {
+        rojasEmpty.classList.add("hidden");
+      }
+    }
+
+    /**
+     * Actualiza toda la interfaz cuando cambia el año, filtro o selección
+     */
+    function updateDashboard() {
+      const selectedYear = YEARS[state.currentIndex];
+      const { countryStats, totalGoles, totalGuantes, totalRojas, jornadasCount } = computeStatsUpTo(state.currentIndex);
+
+      // Actualizar encabezados y marcadores globales
+      slider.value = state.currentIndex;
+      document.getElementById("header-year-end").textContent = selectedYear;
+      document.getElementById("desktop-year-display").textContent = selectedYear;
+      document.getElementById("mobile-year-display").textContent = selectedYear;
+      document.getElementById("badge-jornada").textContent = `Jornada ${jornadasCount} de ${YEARS.length}`;
+      document.getElementById("year-context-note").textContent =
+        `Acumulado desde 2015 hasta ${selectedYear} (${jornadasCount} ${jornadasCount === 1 ? "votación" : "votaciones"} analizadas en 20 países).`;
+
+      // Animación suave de los 3 marcadores globales superiores
+      animateNumber(document.getElementById("total-goles-intervalo"), totalGoles, "", 650, "global-goles");
+      animateNumber(document.getElementById("total-guantes-intervalo"), totalGuantes, "", 650, "global-guantes");
+      animateNumber(document.getElementById("total-rojas-intervalo"), totalRojas, "", 650, "global-rojas");
+
+      renderSliderTicks();
+      renderTopScorers(countryStats, jornadasCount, selectedYear);
+      renderJerseysGrid(countryStats, selectedYear);
+      renderPlayerDetail(countryStats, selectedYear);
+      renderBarCharts(countryStats, jornadasCount, selectedYear);
+    }
+
+    // Acciones interactivas
+    function setYearIndex(idx) {
+      state.currentIndex = Math.max(0, Math.min(YEARS.length - 1, idx));
+      updateDashboard();
+    }
+
+    function selectCountry(code, isHover = false) {
+      if (state.selectedCountry === code) return;
+      state.selectedCountry = code;
+      const selectedYear = YEARS[state.currentIndex];
+      const { countryStats } = computeStatsUpTo(state.currentIndex);
+      renderJerseysGrid(countryStats, selectedYear);
+      renderPlayerDetail(countryStats, selectedYear);
+    }
+
+    /**
+     * Bucle continuo de simulación con barra de progreso lineal entre jornadas
+     */
+    function runSimulationLoop(now) {
+      if (!state.isPlaying) return;
+
+      if (!state.stepStartTime) state.stepStartTime = now;
+      const elapsed = now - state.stepStartTime;
+      const stepProgress = Math.min(elapsed / state.stepDuration, 1);
+
+      // Llenado fluido de la barra de progreso superior del marcador inferior
+      const totalSegments = YEARS.length - 1;
+      const overallPct = ((state.currentIndex + stepProgress) / totalSegments) * 100;
+      if (simProgressBar) {
+        simProgressBar.style.width = `${Math.min(overallPct, 100)}%`;
+      }
+
+      if (stepProgress >= 1) {
+        if (state.currentIndex < YEARS.length - 1) {
+          state.currentIndex++;
+          state.stepStartTime = now;
+          updateDashboard();
+        } else {
+          if (simProgressBar) simProgressBar.style.width = "100%";
+          stopSimulation();
+          return;
+        }
+      }
+
+      state.playRafId = requestAnimationFrame(runSimulationLoop);
+    }
+
+    function stopSimulation() {
+      if (state.playRafId) {
+        cancelAnimationFrame(state.playRafId);
+        state.playRafId = null;
+      }
+      state.isPlaying = false;
+      state.stepStartTime = null;
+      document.getElementById("play-icon").textContent = "▶";
+      document.getElementById("play-text").textContent = "Simular";
+    }
+
+    function togglePlay() {
+      if (state.isPlaying) {
+        stopSimulation();
+        return;
+      }
+
+      state.isPlaying = true;
+      state.stepStartTime = null;
+      document.getElementById("play-icon").textContent = "⏸";
+      document.getElementById("play-text").textContent = "Pausar";
+
+      if (state.currentIndex >= YEARS.length - 1) {
+        state.currentIndex = 0;
+        if (simProgressBar) simProgressBar.style.width = "0%";
+        updateDashboard();
+      }
+
+      state.playRafId = requestAnimationFrame(runSimulationLoop);
+    }
+
+    // Listeners de eventos
+    slider.addEventListener("input", (e) => {
+      if (state.isPlaying) stopSimulation();
+      if (simProgressBar) simProgressBar.style.width = "0%";
+      setYearIndex(parseInt(e.target.value, 10));
+    });
+
+    document.getElementById("btn-prev").addEventListener("click", () => {
+      if (state.isPlaying) stopSimulation();
+      if (simProgressBar) simProgressBar.style.width = "0%";
+      setYearIndex(state.currentIndex - 1);
+    });
+
+    document.getElementById("btn-next").addEventListener("click", () => {
+      if (state.isPlaying) stopSimulation();
+      if (simProgressBar) simProgressBar.style.width = "0%";
+      setYearIndex(state.currentIndex + 1);
+    });
+
+    document.getElementById("btn-play").addEventListener("click", togglePlay);
+
+    // Filtros de camisetas
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filter-btn").forEach(b => {
+          b.classList.remove("bg-emerald-600", "text-white");
+          b.classList.add("bg-slate-800", "text-slate-300");
+        });
+        btn.classList.remove("bg-slate-800", "text-slate-300");
+        btn.classList.add("bg-emerald-600", "text-white");
+
+        state.activeFilter = btn.dataset.filter;
+        updateDashboard();
+      });
+    });
+
+    // Inicialización al cargar
+    window.addEventListener("DOMContentLoaded", () => {
+      updateDashboard();
+    });
+  </script>
+</body>
+</html>
